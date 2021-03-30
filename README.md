@@ -20,6 +20,23 @@ De forma parecida com as premissas de Keller e Segel, os seguintes pontos são a
 # Simulação
 O método numérico utilizado, foi o **FTCS** (*Forward Time Centered Space*, em tradução livre significa "avançado no tempo, centrado no espaço), que é utilizado para a discretização de Equações Diferenciais Parciais(EDP). Além disso, foi utilizado **PBC** (*Periodic Boundary Conditions*)
 
+## Resultados 1D
+
+### Distribuição 1
+![Evolução para determinada distribuição monetária][dist1-1d]
+
+[dist1-1d]:https://github.com/leonardob17/keller-segel/blob/main/imagens/1D-1.jpeg
+
+### Distribuição 2
+![Evolução para determinada distribuição monetária][dist2-1d]
+
+[dist2-1d]:https://github.com/leonardob17/keller-segel/blob/main/imagens/1D-2.jpeg
+
+### Distribuição 3
+![Evolução para determinada distribuição monetária][dist3-1d]
+
+[dist3-1d]:https://github.com/leonardob17/keller-segel/blob/main/imagens/1D-3.jpeg
+
 ## Resultados 2D
 Para todos os exemplos a seguir, foram utilizadas distribuições populacionais homogêneas no espaço.
 
