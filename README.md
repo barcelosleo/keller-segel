@@ -1,6 +1,6 @@
 # Modelo de Keller-Segel para simulação da interação entre População e Atividade Econômica
 
-**Autores**: Leonardo Barcelos, Luana Bianchi e Rubens Borrasca
+**Autores**: Leonardo Barcelos, [Luana Bianchi](https://github.com/luanaBianchi) e [Rubens Borrasca](https://github.com/rubensborrasca)
 
 Proposto por Evelyn Fox Keller, física norte-americana, e Lee Aaron Segel, matemático também norte-americano, o modelo de Keller-Segel foi historicamente utilizado para descrever o movimento de bactérias. Introduzido primeiramente em 1970 para descrever a agregação de uma espécie de bolor limoso (ou slime mold) ameboide, Dictyostelium discoideum, o modelo se tornou um dos mais usados nos estudos biológicos-matemáticos. As células deste slime mold se comportam como amoebas individuais, e se alimentam de bactérias, mas quando a quantidade de comida fica pequena, elas se difundem pelo espaço e então se agregam em formato mais alongado, como o formato das lesmas, para uma migração de longa distância. Keller e Segel desenvolveram um modelo matemático para o processo de agregação, em que a chemotaxis tem papel crítico na auto-ormanização das células.
 
