@@ -336,17 +336,17 @@ if __name__ == "__main__":
     # SETA AS CONDIÇÕES INICIAIS DO MODELO #
     modelo.setEstadoInicial(condicao_inicial_populacao, condicao_inicial_dinheiro)
 
-    # # GERA O OBJETO DE GRÁFICO ESTÁTICO
-    # jpeg = JpegTool(nome_imagem = 'comparacao_tempos_pop_uniforme_sem_dinheiro')
+    # GERA O OBJETO DE GRÁFICO ESTÁTICO
+    jpeg = JpegTool(nome_imagem = 'comparacao_tempos_pop_uniforme_sem_dinheiro')
 
-    # # GERA GRÁFICOS
-    # jpeg.geraJpeg(modelo)
+    # GERA GRÁFICOS
+    jpeg.geraJpeg(modelo)
 
-    # # REINICIALIZA MODELO
-    # modelo = KellerSegelModel(parametros)
+    # REINICIALIZA MODELO
+    modelo = KellerSegelModel(parametros)
 
-    # # SETA AS CONDIÇÕES INICIAIS DO MODELO #
-    # modelo.setEstadoInicial(condicao_inicial_populacao, condicao_inicial_dinheiro)
+    # SETA AS CONDIÇÕES INICIAIS DO MODELO #
+    modelo.setEstadoInicial(condicao_inicial_populacao, condicao_inicial_dinheiro)
 
     # GERA O OBJETO DE ANIMACAO #
     ani = AnimacaoTool(nome_gif = 'dinamica_pop_eco_2d_pop_uniforme_sem_dinheiro')
