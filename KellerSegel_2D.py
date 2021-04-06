@@ -128,11 +128,13 @@ class AnimacaoTool():
         ax = f.add_subplot(1, 2, 1, projection = '3d')
         ax.set_xlabel('x')
         ax.set_ylabel('y')
+        # ax.set_zlim((self.min_pop, self.max_pop))
         self.plotSuperficie(ax, x, y, populacao, 'cool', 'População')
 
         ax = f.add_subplot(1, 2, 2, projection = '3d')
         ax.set_xlabel('x')
         ax.set_ylabel('y')
+        # ax.set_zlim((self.min_mon, self.max_mon))
         self.plotSuperficie(ax, x, y, dinheiro, 'winter', 'Dinheiro')
 
     def __plotUmaSuperficie(self, x, y, populacao, dinheiro): # Método para fazer um plot para população com o dinheiro sendo uma 4ª dimensão na forma de mapa de cor
@@ -164,6 +166,25 @@ class AnimacaoTool():
         self.__plotDuasSuperficies(x, y, populacao, dinheiro)
         # self.__plotUmaSuperficie(x, y, populacao, dinheiro)
 
+    def plotHeatMapEstadoModelo(self, x, y, populacao, dinheiro):
+        l_p, r_p  = populacao.min(), populacao.max()
+        l_m, r_m  = dinheiro.max(), dinheiro.max()
+
+        
+        X, Y = np.meshgrid(x, y)
+
+        figure, (ax_pop, ax_mon) = plt.subplots(1, 2, figsize=(15, 6))
+        
+        plt.subplots_adjust(wspace=0.5)
+
+        ax_pop.set_title('População')
+        c_pop = ax_pop.pcolormesh(X, Y, populacao, shading='gouraud', cmap='cool_r', vmin=l_p, vmax=r_p)
+        figure.colorbar(c_pop, ax = ax_pop)
+
+        ax_mon.set_title('Dinheiro')
+        c_mon = ax_mon.pcolormesh(X, Y, dinheiro, shading='gouraud', cmap='viridis', vmin=l_m, vmax=r_m)
+        figure.colorbar(c_mon, ax = ax_mon)
+
     def __erro(self, pn, pn10): # Cálculo do erro
         dif_p = pn - pn10
         erro = dif_p.max()
@@ -175,6 +196,47 @@ class AnimacaoTool():
         self.images.append(imageio.imread(self.temp_img_name))
         os.remove(self.temp_img_name)
 
+    def geraGifHeatMap(self, modelo, epsilon = 1e-6):
+        print(f"Iniciando processamento...")
+        start = time.time() # Salva o tempo inicial de processamento do modelo
+
+        x = modelo.parametros.x
+        y = modelo.parametros.y
+        populacao, dinheiro, _ = modelo.getEstado()
+
+        self.plotHeatMapEstadoModelo(x, y, populacao, dinheiro) # Plota o estado inicial
+        self.salvaFrame() # Salva o frame
+
+        erro = 999
+
+        print(f"População: {modelo.contagemPopulacao()}") # Esse trecho de código serve para acompanhar se a população está se mantendo fixa, em consonância com o modelo
+        print(f"Dinheiro: {modelo.contagemDinheiro()}\n") # Mostra o dinheiro líquido inicial
+
+        while erro >= epsilon:
+            modelo.atualizaEstadoMultiplasVezes(n = 10) # Intera dez vezes o estado do modelo
+            p, d, _ = modelo.getEstado() # Pega os valores da população e dinheiro
+
+            self.plotHeatMapEstadoModelo(x, y, p, d) # Plota o estado atual
+            self.salvaFrame() # Salva o frame
+
+            erro = self.__erro(dinheiro, d) # Calcula o erro
+            dinheiro = d # atualiza a variável de comparação
+
+            print(f"Erro atual: {erro}") # Mostra o erro para verificar se o modelo está convergindo
+            print(f"População Atual: {modelo.contagemPopulacao()}") # Verifica a população
+            print(f"Dinheiro Atual: {modelo.contagemDinheiro()}\n") # Mostra o dinheiro líquido
+
+        elapsed = time.time() - start # Calcula o tempo de processamento
+        print(f"Fim do processamento: {elapsed}s")
+
+        print(f"Iniciando render...")
+        start = time.time() # Salva o tempo inicial de render
+
+        imageio.mimsave(f'{self.nome_gif}.gif', self.images, fps=15) # Gera um gif com as imagens geradas. Deve-se tomar cuidado com o número de interações, pois muitas imagens podem lotar facilmente a memória RAM
+
+        elapsed = time.time() - start # Calcula o tempo de render do gif
+        print(f"Fim do render: {elapsed}s")
+
     def geraGif(self, modelo, epsilon = 1e-6): # Método que gera o gif animado. Recebe como parâmetro o modelo, e uma tolerância epsilon
         print(f"Iniciando processamento...")
         start = time.time() # Salva o tempo inicial de processamento do modelo
@@ -182,6 +244,12 @@ class AnimacaoTool():
         x = modelo.parametros.x
         y = modelo.parametros.y
         populacao, dinheiro, _ = modelo.getEstado()
+
+        self.max_pop = populacao.max()
+        self.min_pop = populacao.min()
+
+        self.max_mon = dinheiro.max()
+        self.min_mon = dinheiro.min()
 
         self.plotEstadoModelo(x, y, populacao, dinheiro) # Plota o estado inicial
         self.salvaFrame() # Salva o frame
@@ -318,26 +386,26 @@ if __name__ == "__main__":
 
     # GERA CONDIÇÕES INICIAIS A SEREM ESTUDADAS #
     condicao_inicial_populacao = np.matrix(np.full((parametros.N_x, parametros.N_x), 1 / (L ** 2)))
-    condicao_inicial_dinheiro = np.matrix(np.full((parametros.N_y, parametros.N_y), 1 / (L ** 2)))
+    condicao_inicial_dinheiro = np.matrix(np.zeros((parametros.N_y, parametros.N_y)))
 
-    # condicao_inicial_dinheiro[(0, 0)] = 0.125
-    # condicao_inicial_dinheiro[(0, 99)] = 0.125
-    # condicao_inicial_dinheiro[(99, 99)] = 0.125
-    # condicao_inicial_dinheiro[(99, 0)] = 0.125
-    # condicao_inicial_dinheiro[(49, 49)] = 0.5
-    # condicao_inicial_dinheiro[(49, 69)] = 1
-    # condicao_inicial_dinheiro[(49, 29)] = 2
-    # condicao_inicial_dinheiro[(69, 49)] = 3
-    # condicao_inicial_dinheiro[(29, 49)] = 4
+    condicao_inicial_dinheiro[(0, 0)] = 0.125
+    condicao_inicial_dinheiro[(0, 99)] = 0.125
+    condicao_inicial_dinheiro[(99, 99)] = 0.125
+    condicao_inicial_dinheiro[(99, 0)] = 0.125
+    condicao_inicial_dinheiro[(49, 49)] = 2
+    condicao_inicial_dinheiro[(49, 69)] = 1
+    condicao_inicial_dinheiro[(49, 29)] = 1
+    condicao_inicial_dinheiro[(69, 49)] = 1
+    condicao_inicial_dinheiro[(29, 49)] = 1
 
-    condicao_inicial_dinheiro[(24, 24)] = 1
-    condicao_inicial_dinheiro[(74, 74)] = 1
+    # condicao_inicial_dinheiro[(74, 74)] = 1
+    # condicao_inicial_dinheiro[(124, 124)] = 1
 
     # SETA AS CONDIÇÕES INICIAIS DO MODELO #
     modelo.setEstadoInicial(condicao_inicial_populacao, condicao_inicial_dinheiro)
 
     # GERA O OBJETO DE GRÁFICO ESTÁTICO
-    jpeg = JpegTool(nome_imagem = 'comparacao_tempos_pop_uniforme_sem_dinheiro')
+    jpeg = JpegTool(nome_imagem = 'comparacao_tempos_2d')
 
     # GERA GRÁFICOS
     jpeg.geraJpeg(modelo)
@@ -349,9 +417,15 @@ if __name__ == "__main__":
     modelo.setEstadoInicial(condicao_inicial_populacao, condicao_inicial_dinheiro)
 
     # GERA O OBJETO DE ANIMACAO #
-    ani = AnimacaoTool(nome_gif = 'dinamica_pop_eco_2d_pop_uniforme_sem_dinheiro')
+    ani = AnimacaoTool(nome_gif = 'dinamica_pop_eco_2d')
 
     # GERA GIF COM A EVOLUCAO DO MODELO #
-    ani.geraGif(modelo)
+    ani.geraGif(modelo, epsilon=1e-9)
+
+    # # GERA O OBJETO DE ANIMACAO #
+    # ani = AnimacaoTool(nome_gif = 'dinamica_pop_eco_2d_heat_map')
+
+    # # GERA GIF COM A EVOLUCAO DO MODELO NA FORMA DE MAPA DE CALOR 2D #
+    # ani.geraGifHeatMap(modelo)
 
 
