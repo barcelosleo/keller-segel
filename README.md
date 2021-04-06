@@ -1,5 +1,7 @@
 # Modelo de Keller-Segel para simulação da interação entre População e Atividade Econômica
 
+**Autores**: Leonardo Barcelos, [Luana Bianchi](https://github.com/luanaBianchi) e [Rubens Borrasca](https://github.com/rubensborrasca)
+
 Proposto por Evelyn Fox Keller, física norte-americana, e Lee Aaron Segel, matemático também norte-americano, o modelo de Keller-Segel foi historicamente utilizado para descrever o movimento de bactérias. Introduzido primeiramente em 1970 para descrever a agregação de uma espécie de bolor limoso (ou slime mold) ameboide, Dictyostelium discoideum, o modelo se tornou um dos mais usados nos estudos biológicos-matemáticos. As células deste slime mold se comportam como amoebas individuais, e se alimentam de bactérias, mas quando a quantidade de comida fica pequena, elas se difundem pelo espaço e então se agregam em formato mais alongado, como o formato das lesmas, para uma migração de longa distância. Keller e Segel desenvolveram um modelo matemático para o processo de agregação, em que a chemotaxis tem papel crítico na auto-ormanização das células.
 
 Baseados no que já era conhecido sobre esses organismos, Keller e Segel utilizaram as seguintes premissas:
@@ -19,6 +21,23 @@ De forma parecida com as premissas de Keller e Segel, os seguintes pontos são a
 
 # Simulação
 O método numérico utilizado, foi o **FTCS** (*Forward Time Centered Space*, em tradução livre significa "avançado no tempo, centrado no espaço), que é utilizado para a discretização de Equações Diferenciais Parciais(EDP). Além disso, foi utilizado **PBC** (*Periodic Boundary Conditions*)
+
+## Resultados 1D
+
+### Distribuição 1
+![Evolução para determinada distribuição monetária][dist1-1d]
+
+[dist1-1d]:https://github.com/leonardob17/keller-segel/blob/main/imagens/1D-1.jpeg
+
+### Distribuição 2
+![Evolução para determinada distribuição monetária][dist2-1d]
+
+[dist2-1d]:https://github.com/leonardob17/keller-segel/blob/main/imagens/1D-2.jpeg
+
+### Distribuição 3
+![Evolução para determinada distribuição monetária][dist3-1d]
+
+[dist3-1d]:https://github.com/leonardob17/keller-segel/blob/main/imagens/1D-3.jpeg
 
 ## Resultados 2D
 Para todos os exemplos a seguir, foram utilizadas distribuições populacionais homogêneas no espaço.
